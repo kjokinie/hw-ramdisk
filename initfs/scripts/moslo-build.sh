@@ -341,9 +341,16 @@ rm -f $TMPFILE
 # Create (and fix) busybox links
 BUSYBOX_BINARY=`find $ROOT_DIR -name "busybox*"`
 echo "$BUSYBOX_BINARY"
-${BUSYBOX_BINARY} --install -s $ROOT_DIR/bin/
+BUSYBOX_TMP=$(mktemp -d -p $ROOT_DIR)
+mkdir -p $BUSYBOX_TMP/bin
+
+${BUSYBOX_BINARY} --install -s $BUSYBOX_TMP/bin/
+rsync -l --ignore-existing $BUSYBOX_TMP/bin/* $ROOT_DIR/bin/
+rm -rf $BUSYBOX_TMP
 for l in $ROOT_DIR/bin/*; do
-  ln -sf /sbin/busybox-static $l
+  if test -h $l; then
+    ln -sf /sbin/busybox-static $l
+  fi
 done
 
 #

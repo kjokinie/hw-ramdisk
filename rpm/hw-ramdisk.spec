@@ -10,6 +10,7 @@ BuildRequires:  findutils
 BuildRequires:  gzip
 BuildRequires:  cpio
 Requires:  busybox-static
+Requires:  rsync
 
 
 %description
